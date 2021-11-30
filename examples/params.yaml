@@ -4,22 +4,26 @@ run_name: 'map_wide'
 perf_num: 6
 
 # map paths
-map_path: './example_map'
+map_path: './maps/SOCHI'
 map_ext: '.png'
 
 # starting pose for map
-sx: 0.0
-sy: 0.0
-stheta: 1.37079632679
+sx:  0.0
+sy:  0.0
+stheta: 4.1421595 #1.37079632679
 
 # raceline path and indices
-wpt_path: './example_waypoints.csv'
+wpt_path: './maps/SOCHI.csv'
 wpt_delim: ';'
 wpt_rowskip: 3
 wpt_xind: 1
 wpt_yind: 2
 wpt_thind: 3
 wpt_vind: 5
+
+# Planner set speed
+max_speed: 8.0
+min_speed: 4.0
 
 # varied params bound
 # physical params

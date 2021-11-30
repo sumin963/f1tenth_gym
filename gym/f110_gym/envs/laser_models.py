@@ -583,7 +583,7 @@ def main():
     num_beams = 1080
     fov = 4.7
     # map_path = '../envs/maps/berlin.yaml'
-    map_path = '../../../examples/example_map.yaml'
+    map_path = '../../../examples/maps/example_map.yaml'
     map_ext = '.png'
     scan_rng = np.random.default_rng(seed=12345)
     scan_sim = ScanSimulator2D(num_beams, fov)
