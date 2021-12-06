@@ -76,14 +76,14 @@ class EnvProcess:
     def step(self, actions):
         actions = np.array(actions)
         self.obs, self.step_reward, self.done, self.info = self.env.step(actions)
-        # return self.obs, self.step_reward, self.done, self.info
 
     def render(self):
         self.env.render(mode=self.conf.render_mode)
 
     def main(self):
         self.render()
-
+        start = time.time()
+        laptime = 0.0
         while not self.done:
             actions = []
             futures = []
@@ -91,6 +91,8 @@ class EnvProcess:
                 for i, p in enumerate(self.planners):
                     if hasattr(p, 'plan'):
                         futures.append(executor.submit(p.plan, self._pack_obs(i)))
+                    elif hasattr(p, 'driving'):
+                        futures.append(executor.submit(p.driving, self._pack_obs(i)))
 
             for future in futures:
                 speed, steer = future.result()
@@ -98,6 +100,9 @@ class EnvProcess:
 
             self.step(actions)
             self.render()
+            laptime += self.step_reward
+
+        print(f'Sim elapsed time: {laptime} Real elapsed time: {time.time() - start}')
 
 
 if __name__ == "__main__":
