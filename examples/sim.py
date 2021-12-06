@@ -66,7 +66,7 @@ class EnvProcess:
 
     def reset(self):
         obj = []
-        for i in range(1, len(self.planners)+1):
+        for i in range(1, len(self.planners) + 1):
             if hasattr(self.conf, f'p{i}'):
                 p_obj = getattr(self.conf, f'p{i}')
                 obj.append([p_obj['sx'], p_obj['sy'], p_obj['stheta']])
@@ -84,7 +84,7 @@ class EnvProcess:
         self.render()
         start = time.time()
         laptime = 0.0
-        while not self.done:
+        while self.done == False or isinstance(self.done, float):
             actions = []
             futures = []
             with ThreadPoolExecutor() as executor:
@@ -101,6 +101,7 @@ class EnvProcess:
             self.step(actions)
             self.render()
             laptime += self.step_reward
+            
 
         print(f'Sim elapsed time: {laptime} Real elapsed time: {time.time() - start}')
 
@@ -110,6 +111,7 @@ if __name__ == "__main__":
         conf_dict = yaml.load(file, Loader=yaml.FullLoader)
     conf = Namespace(**conf_dict)
 
-    planners = [fc.FgPlanner(conf, 0.3302), wf.PurePursuitPlanner(conf, 0.3302)]
+    # planners = [fc.FgPlanner(conf, 0.3302), wf.PurePursuitPlanner(conf, 0.3302)]
+    planners = [fc.FgPlanner(conf, 0.3302), fc.FgPlanner(conf, 0.3302)]
     env_process = EnvProcess(conf, planners)
     env_process.main()
