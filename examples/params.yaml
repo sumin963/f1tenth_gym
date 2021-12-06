@@ -42,8 +42,7 @@ render_mode: 'human' # or 'human_fast'
 # vehicle params
 mass: 3.463388126201571
 lf: 0.15597534362552312
-tlad: 0.82461887897713965
-vgain: 0.90338203837889
+
 
 # Planner set speed
 max_speed: 8.0
