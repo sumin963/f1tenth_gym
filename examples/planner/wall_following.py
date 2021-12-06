@@ -1,4 +1,4 @@
-class wallPlanner:
+class WallPlanner:
 
     def __init__(self, params, robot_scale=0.3302):
         self.parms = params
