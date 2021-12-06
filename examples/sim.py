@@ -8,8 +8,8 @@ from argparse import Namespace
 from pyglet.gl import GL_POINTS
 
 from planner import fgm_convolution as fc
-from planner import waypoint_follow as wf
-
+from planner import wall_following as wf
+from planner import pure_pursuit as pp
 
 class EnvProcess:
     def __init__(self, conf, planners):
@@ -101,7 +101,6 @@ class EnvProcess:
             self.step(actions)
             self.render()
             laptime += self.step_reward
-            
 
         print(f'Sim elapsed time: {laptime} Real elapsed time: {time.time() - start}')
 
@@ -111,7 +110,7 @@ if __name__ == "__main__":
         conf_dict = yaml.load(file, Loader=yaml.FullLoader)
     conf = Namespace(**conf_dict)
 
-    # planners = [fc.FgPlanner(conf, 0.3302), wf.PurePursuitPlanner(conf, 0.3302)]
-    planners = [fc.FgPlanner(conf, 0.3302), fc.FgPlanner(conf, 0.3302)]
+    planners = [fc.FgPlanner(conf, 0.3302), pp.PurePursuitPlanner(conf, 0.3302), wf.WallPlanner(conf, 0.3302)]
+    # planners = [fc.FgPlanner(conf, 0.3302), waf.wallPlanner(conf, 0.3302)]
     env_process = EnvProcess(conf, planners)
     env_process.main()
