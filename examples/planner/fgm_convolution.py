@@ -47,8 +47,8 @@ class FgPlanner:
 
         return steering_angle
 
-    def plan(self, scan_data, odom_data):
-        ranges = scan_data['ranges']
+    def plan(self, obs):
+        ranges = obs['scans']
         proc_ranges = self.preprocess_lidar(ranges)
         closest = proc_ranges.argmin()
 

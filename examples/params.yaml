@@ -8,9 +8,22 @@ map_path: './maps/SOCHI'
 map_ext: '.png'
 
 # starting pose for map
-sx:  0.0
-sy:  0.0
-stheta: 4.1421595 #1.37079632679
+p1:
+  sx:  1.0
+  sy:  0.0
+  stheta: 4.1421595 #1.37079632679
+p2:
+  sx:  0.5
+  sy:  -0.5
+  stheta: 4.1421595 #1.37079632679
+p3:
+  sx:  0.0
+  sy:  0.0
+  stheta: 4.1421595 #1.37079632679
+p4:
+  sx:  -0.5
+  sy:  0.5
+  stheta: 4.1421595 #1.37079632679
 
 # raceline path and indices
 wpt_path: './maps/SOCHI.csv'
@@ -20,6 +33,17 @@ wpt_xind: 1
 wpt_yind: 2
 wpt_thind: 3
 wpt_vind: 5
+
+# render params
+render_waypoints: True
+render_center: True
+render_mode: 'human' # or 'human_fast'
+
+# vehicle params
+mass: 3.463388126201571
+lf: 0.15597534362552312
+tlad: 0.82461887897713965
+vgain: 0.90338203837889
 
 # Planner set speed
 max_speed: 8.0

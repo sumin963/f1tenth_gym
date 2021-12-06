@@ -176,16 +176,16 @@ class PurePursuitPlanner:
         else:
             return None
 
-    def plan(self, scan_data, odom_data):
+    def plan(self, obs):
         """
         gives actuation given observation
         """
 
-        pose_x = odom_data['pose_x']
-        pose_y = odom_data['pose_y']
-        pose_theta = odom_data['pose_theta']
-        lookahead_distance = odom_data['lookahead_distance']
-        vgain = odom_data['vgain']
+        pose_x = obs['poses_x']
+        pose_y = obs['poses_y']
+        pose_theta = obs['poses_theta']
+        lookahead_distance = self.conf.lf
+        vgain = self.conf.vgain
 
         position = np.array([pose_x, pose_y])
         lookahead_point = self._get_current_waypoint(self.waypoints, lookahead_distance, position, pose_theta)
