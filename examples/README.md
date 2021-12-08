@@ -66,20 +66,7 @@ def main(self):
         self.render()
         laptime += self.step_reward
 ```
-
-
-## Environment Functions
-
-- `_render_callback()`: 시뮬레이터 실행 시 맵에 웨이포인트를 표시하거나, 첫번째 자동차를 중심으로 렌더링하는 함수입니다.  
-- `_pack_obs()`: 각 자동차의 상태를 포함하는 Observation 값을 Planner의 Index에 따라 리패키징하여 리턴하는 함수 입니다. 
-- `reset()`: 시뮬레이터 초기화 함수입니다.  
-- `step()`: 시뮬레이터 실행 함수입니다.  
-- `render()`: 시뮬레이터 렌더링 함수입니다.  
-- `main()`: 시뮬레이터 메인 프로세스 함수입니다. 이 함수를 사용하여 시뮬레이터를 실행할 수 있습니다.
-
-
-
-## Observation
+### Observation (self.obs)
 Observation은 `dict()` 자료형이며, Planner가 필요로 하는 데이터를 포함하고 있습니다.
 
  `scans`, `poses_x`, `poses_y`, `poses_theta`, `linear_vels_x`, `linear_vels_y`, `ang_vels_z`, `collisions`, `lap_times`, `lap_counts` 는 planner의 개수에 따라 리턴되는 배열의 길이가 달라집니다. 
@@ -129,15 +116,15 @@ Observation은 `dict()` 자료형이며, Planner가 필요로 하는 데이터�
 * `poses_y` : 각 차량들의 y 좌표가 있는 Float Array를 포함합니다.
 * `scans` : LiDAR 센서 데이터입니다. 4.7 radian 을 약 1080개의 점으로 나누어 각각 포인트에 대한 거리 값이 들어있는 Float Array를 포함합니다.
 
-## Step_reward
+### Step_reward (self.step_reward)
 환경이 진행되는 Step 당 몇 초로 계산할 것인지를 설정하는 부분입니다. 환경에서 몇초가 지났는지를 표시하기 위해 사용됩니다.  
 * `0.01 (Float)`
 
-## Done
+### Done (self.done)
 환경이 완료 되었는 지를 나타내는 부분입니다.  
 * `False (Bool)`
 
-## Info
+### Info (self.info)
 ```python
 # Example (Solo)
 {'checkpoint_done': array([False])}
@@ -147,3 +134,13 @@ Observation은 `dict()` 자료형이며, Planner가 필요로 하는 데이터�
 ```
 
 * `checkpoint_done`: 각 Agent가 완주를 하였는지를 나타내며 Bool이 포함된 Array를 포함합니다. 
+
+## Environment Functions
+
+- `_render_callback()`: 시뮬레이터 실행 시 맵에 웨이포인트를 표시하거나, 첫번째 자동차를 중심으로 렌더링하는 함수입니다.  
+- `_pack_obs()`: 각 자동차의 상태를 포함하는 Observation 값을 Planner의 Index에 따라 리패키징하여 리턴하는 함수 입니다. 
+- `reset()`: 시뮬레이터 초기화 함수입니다.  
+- `step()`: 시뮬레이터 실행 함수입니다.  
+- `render()`: 시뮬레이터 렌더링 함수입니다.  
+- `main()`: 시뮬레이터 메인 프로세스 함수입니다. 이 함수를 사용하여 시뮬레이터를 실행할 수 있습니다.
+
