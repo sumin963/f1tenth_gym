@@ -42,7 +42,7 @@ waypoint 를 사용할때, waypoint파일의 경로와 각각 좌표의 인덱�
 * `max_speed`: planner에서 사용할 최대속도입니다.
 * `min_speed`: planner에서 사용할 최저속도입니다.
 
-##varied params bound
+## varied params bound
 환경에서 사용되는 다양한 매개변수 입니다. 각 값은 Fix되어 있으며 수정하지 않는것을 **권장**합니다.
 ### physical params
 * `mass_min`: 차량무게의 최솟값입니다.
