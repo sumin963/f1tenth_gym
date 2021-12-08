@@ -111,6 +111,6 @@ if __name__ == "__main__":
     conf = Namespace(**conf_dict)
 
     planners = [fc.FgPlanner(conf, 0.3302), pp.PurePursuitPlanner(conf, 0.3302), wf.WallPlanner(conf, 0.3302)]
-    # planners = [fc.FgPlanner(conf, 0.3302), waf.wallPlanner(conf, 0.3302)]
+    # planners = [fc.FgPlanner(conf, 0.3302), pp.PurePursuitPlanner(conf, 0.3302)]
     env_process = EnvProcess(conf, planners)
     env_process.main()
