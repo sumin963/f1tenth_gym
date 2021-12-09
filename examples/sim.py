@@ -26,6 +26,7 @@ class EnvProcess:
 
         self.obs, self.step_reward, self.done, self.info = self.reset()
 
+    # 시뮬레이터 실행 시 맵에 웨이포이트를 표시하거나 첫 번째 Agent를 기준으로 렌더링 하는 함수입니다.
     def _render_callback(self, e):
         if self.conf.render_center:
             x = e.cars[0].vertices[::2]
@@ -49,6 +50,7 @@ class EnvProcess:
                 else:
                     self.drawn_waypoints[i].vertices = [scaled_points[i, 0], scaled_points[i, 1], 0.]
 
+    # index를 받아 각 자동차의 상태를 포함하는 Observation을 리패키징 하여 반환하는 함수입니다.
     def _pack_obs(self, i):
         obs = {
             'scans': self.obs['scans'][i],
@@ -64,6 +66,7 @@ class EnvProcess:
         }
         return obs
 
+    # 시뮬레이터를 초기화하는 함수 입니다.
     def reset(self):
         obj = []
         for i in range(1, len(self.planners) + 1):
@@ -73,13 +76,16 @@ class EnvProcess:
 
         return self.env.reset(np.array(obj))
 
+    # 시뮬레이터를 한 스텝 실행하는 함수 입니다.
     def step(self, actions):
         actions = np.array(actions)
         self.obs, self.step_reward, self.done, self.info = self.env.step(actions)
 
+    # 시뮬레이터를 렌더링 하는 함수입니다.
     def render(self):
         self.env.render(mode=self.conf.render_mode)
 
+    # 환경의 메인 함수입니다.
     def main(self):
         self.render()
         start = time.time()
@@ -87,7 +93,7 @@ class EnvProcess:
         while self.done == False or isinstance(self.done, float):
             actions = []
             futures = []
-            with ThreadPoolExecutor() as executor:
+            with ThreadPoolExecutor() as executor:  # Parallelize the planning
                 for i, p in enumerate(self.planners):
                     if hasattr(p, 'plan'):
                         futures.append(executor.submit(p.plan, self._pack_obs(i)))
@@ -95,10 +101,10 @@ class EnvProcess:
                         futures.append(executor.submit(p.driving, self._pack_obs(i)))
 
             for future in futures:
-                speed, steer = future.result()
+                speed, steer = future.result()  # Wait for the result
                 actions.append([steer, speed])
 
-            self.step(actions)
+            self.step(actions)  # Step the simulator
             self.render()
             laptime += self.step_reward
 
