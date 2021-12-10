@@ -15,6 +15,7 @@ python sim.py
 from planner import fgm_convolution as fc
 from planner import wall_following as wf
 from planner import pure_pursuit as pp
+from planner import fgm_gnu as fg
 ```
 
 - sim.py의 메인 프로세스입니다.  파라미터를 로드하여 planner와 EnvProcess에 전달하여 EnvProcess의 main()를 실행 시키는 구조로 되어있습니다. 
