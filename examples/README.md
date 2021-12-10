@@ -27,7 +27,7 @@ if __name__ == "__main__":
         conf_dict = yaml.load(file, Loader=yaml.FullLoader)
     conf = Namespace(**conf_dict)
     
-    # planners 변수에 실행하기 원하는 planner Class를 추가하여 시뮬레이팅 할 수 있습니다.
+    # planners 변수에 실행하기 원하는 주행 알고리즘 planner class를 로드합니다. 이는 최대 4개 까지 추가 가능합니다. 
     
     # 자동차 3대
     planners = [fc.FgPlanner(conf, 0.3302), pp.PurePursuitPlanner(conf, 0.3302), wf.WallPlanner(conf, 0.3302)] 
