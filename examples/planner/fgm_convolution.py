@@ -15,7 +15,7 @@ class FgPlanner:
 
     def preprocess_lidar(self, ranges):
 
-        self.radians_per_elem = (2 * np.pi) / len(ranges)
+        self.radians_per_elem = ((3/2) * np.pi) / len(ranges)
         proc_ranges = np.array(ranges[180:-180])  # 180도 봄
         proc_ranges = np.convolve(proc_ranges, np.ones(self.PREPROCESS_CONV_SIZE), 'same') / self.PREPROCESS_CONV_SIZE
         proc_ranges = np.clip(proc_ranges, 0, self.MAX_LIDAR_DIST)  # 오류 잡이용
