@@ -13,7 +13,7 @@ class WallPlanner:
             steering_angle = 0.15
             speed = 2.0
         elif left < 1.7:
-            steering_angle = 0.15
+            steering_angle = -0.15
             speed = 2.0
         else:
             steering_angle = 0.15
