@@ -16,7 +16,7 @@ class WallPlanner:
             steering_angle = -0.15
             speed = 2.0
         else:
-            steering_angle = 0.15
+            steering_angle = 0.0
             speed = 7.0
             
         return speed, steering_angle
