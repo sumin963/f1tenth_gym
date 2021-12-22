@@ -6,15 +6,17 @@ class WallPlanner:
 
     def plan(self, obs):
         ranges = obs['scans']
-        front = ranges[540]
-        left = ranges[270]
-        right = ranges[810]
+        left = ranges[720]
+        
 
-        if left >= right:
-            steering_angle = -0.2
-            speed = 3
-        elif left < right:
-            steering_angle = 0.2
-            speed = 3
-
+        if left > 2.1:
+            steering_angle = 0.15
+            speed = 2.0
+        elif left < 1.7:
+            steering_angle = 0.15
+            speed = 2.0
+        else:
+            steering_angle = 0.15
+            speed = 7.0
+            
         return speed, steering_angle
