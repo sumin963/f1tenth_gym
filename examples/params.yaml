@@ -45,7 +45,7 @@ lf: 0.15597534362552312
 
 
 # Planner set speed
-max_speed: 8.0
+max_speed: 4.0
 min_speed: 4.0
 
 # varied params bound

@@ -11,6 +11,9 @@ from planner import fgm_convolution as fc
 from planner import wall_following as wf
 from planner import pure_pursuit as pp
 from planner import fgm_gnu as fg
+from planner import fgm_pp_v1 as fp1
+from planner import fgm_pp_v2 as fp2
+from planner import fgm_pp_v3 as fp3
 
 class EnvProcess:
     def __init__(self, conf, planners):
@@ -119,6 +122,8 @@ if __name__ == "__main__":
 
     # planners = [fc.FgPlanner(conf, 0.3302), pp.PurePursuitPlanner(conf, 0.3302), wf.WallPlanner(conf, 0.3302)]
     # planners = [fc.FgPlanner(conf, 0.3302), pp.PurePursuitPlanner(conf, 0.3302)]
-    planners = [fg.FGMPlanner(conf, 0.3302)]
+    # planners = [fg.FGMPlanner(conf, 0.3302)]
+    planners = [fp3.FGM_PP_V1(conf, 0.3302)]
+
     env_process = EnvProcess(conf, planners)
     env_process.main()

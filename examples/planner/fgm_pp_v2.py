@@ -2,10 +2,9 @@ import numpy as np
 import math
 import time
 from queue import Queue
-from multiprocessing import shared_memory, Lock
 
-from planner.sub_planner.fgm_shm import FGM
-from planner.sub_planner.pp_shm import PP
+from planner.sub_planner.fgm_for_fgmpp import FGM
+from planner.sub_planner.pp_for_fgmpp import PP
 
 # from .sub_planner.speed_controller import SpeedController as SC
 """
@@ -124,7 +123,7 @@ def _find_steer_path(transformed_desired_point, actual_lookahead):
     return goal_path_radius, goal_path_theta, steering_direction
 
 
-class FGM_PP_V1:
+class FGM_PP_V2:
     def __init__(self, conf, robot_scale=0.325):
         self.conf = conf
 
@@ -147,27 +146,21 @@ class FGM_PP_V1:
         self.current_waypoint_index = 0
         self.current_speed = 0.0
         self.current_position = [0] * 3
-        self.scan_filtered = [0]*1080
-        self.transformed_desired_point = [0]*3
+        self.scan_filtered = []
         self.scan_range = 0
         self.radians_per_elem = 0.00435
 
-        self.speed = 0
-        self.steer = 0
+        self.main_global_q = Queue(1)
+        self.global_main_q = Queue(1)
 
-        self.lock = Lock()
-        self.current_position_shm = shared_memory.ShareableList(self.current_position)
-        self.current_speed_shm = shared_memory.ShareableList([self.current_speed])
-        self.scan_filtered_shm = shared_memory.ShareableList(self.scan_filtered)
-        self.transformed_desired_point_shm = shared_memory.ShareableList(self.transformed_desired_point)
-        self.steer_global_shm = shared_memory.ShareableList([self.steer])
-        self.steer_local_shm = shared_memory.ShareableList([self.steer])
-        self.sp_shm = shared_memory.ShareableList([0])
+        self.main_local_q = Queue(1)
+        self.local_main_q = Queue(1)
 
-        self.global_t = PP(self.current_position_shm, self.current_speed_shm, self.transformed_desired_point_shm,
-                           self.steer_global_shm, self.lock, self.sp_shm)
-        self.local_t = FGM(self.current_position_shm, self.current_speed_shm, self.scan_filtered_shm,
-                           self.transformed_desired_point_shm, self.steer_local_shm, self.lock, self.sp_shm)
+        self.global_t = PP(self.main_global_q, self.global_main_q)
+        self.local_t = FGM(self.main_local_q, self.local_main_q)
+
+        self.global_t.daemon = True
+        self.local_t.daemon = True
 
         self.global_t.start()
         self.local_t.start()
@@ -345,26 +338,31 @@ class FGM_PP_V1:
                                                                                      self.current_waypoint_index,
                                                                                      lookahead_desired)
 
-        self.transformed_desired_point = _transform_point(self.PI, self.current_position, desired_point)
+        transformed_desired_point = _transform_point(self.PI, self.current_position, desired_point)
         
-        with self.lock:
-            for i in range(len(self.current_position)):
-                self.current_position_shm[i] = float(self.current_position[i])
-                self.transformed_desired_point_shm[i] =  float(self.transformed_desired_point[i])
-            for i in range(len(self.scan_filtered)):
-                self.scan_filtered_shm[i] = float(self.scan_filtered[i])
-            self.current_speed_shm[0] = float(self.current_speed)
-            self.sp_shm[0] = float(1)
+        data = [self.current_position, self.current_speed, self.scan_filtered, transformed_desired_point]
+        self.main_global_q.put(data)
+        self.main_local_q.put(data)
 
         obstacle_detection = self.obstacle_detection(self.scan_filtered)
         # self.obs = True
 
         if obstacle_detection:
-            self.steer = self.steer_local_shm[0]
+            steer = self.local_main_q.get()
+            self.global_main_q.get()
         else:
-            self.steer = self.steer_global_shm[0]
+            steer = self.global_main_q.get()
+            self.local_main_q.get()
 
-        if np.fabs(self.steer) > self.PI / 8:
+
+        # if obstacle_detection:
+        #     steer = self.fgm_convolution(self.scan_filtered)
+        # else:
+        #     goal_path_radius, _, steering_direction = _find_steer_path(transformed_desired_point,
+        #                                                                actual_lookahead)
+        #     steer = self.set_steering_angle(goal_path_radius, steering_direction)
+
+        if np.fabs(steer) > self.PI / 8:
             speed = self.SPEED_MIN
 
         else:
@@ -378,4 +376,4 @@ class FGM_PP_V1:
             if self.SPEED_MAX < speed or speed < self.SPEED_MIN:
                 print(speed, angle_control)
 
-        return speed, self.steer
+        return speed, steer
